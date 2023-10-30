@@ -6,6 +6,7 @@ import argparse
 import importlib
 import inspect
 import numpy as np
+import pyfftw
 import scipy.fft
 import torch.fft
 import os
@@ -43,6 +44,7 @@ class TorchFft_CPU(TorchFft):
 # Mark which FFT submodules are available...
 fft_modules = {
     'numpy.fft': np.fft,
+    'pyfftw': pyfftw.builders,
     'scipy.fft': scipy.fft,
     'torch.fft': TorchFft_CPU(),
 }
