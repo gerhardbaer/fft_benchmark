@@ -196,11 +196,10 @@ def time_func(func, x, kwargs, timer=None, batch_size=16, repetitions=24,
 
 def print_summary(data, header=''):
     a = np.array(data)
-    print("TAG: " + header)
+    print("TAG: " + header, end='')
     print('min={min:.3f} µs, median={med:.3f} µs, max={max:.3f} µs'.format(
         min=np.min(a)*1e6, med=np.median(a)*1e6, max=np.max(a)*1e6
     ))
-    print("", flush=True)
 
 
 def arg_signature(ar):
