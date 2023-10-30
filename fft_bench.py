@@ -6,6 +6,7 @@ import argparse
 import importlib
 import inspect
 import numpy as np
+import pyfftw
 import scipy.fft
 import os
 import perf
@@ -14,7 +15,11 @@ import sys
 
 
 # Mark which FFT submodules are available...
-fft_modules = {'numpy.fft': np.fft, 'scipy.fft': scipy.fft}
+fft_modules = {
+    'numpy.fft': np.fft,
+    'pyfftw': pyfftw.builders,
+    'scipy.fft': scipy.fft,
+}
 
 def valid_shape(shape_str):
     shape = re.sub(r'[^\d]+', 'x', shape_str).strip('x').split('x')
