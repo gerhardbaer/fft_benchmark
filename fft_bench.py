@@ -6,6 +6,7 @@ import argparse
 import importlib
 import inspect
 import numpy as np
+import pyfftw
 import scipy.fft
 import os
 import perf
@@ -16,6 +17,7 @@ import sys
 # Mark which FFT submodules are available...
 fft_modules = {
     'numpy.fft': np.fft,
+    'pyfftw': pyfftw.builders,
     'scipy.fft': scipy.fft,
 }
 
