@@ -171,3 +171,6 @@ for mod_name in args.modules:
         print(f'{args.prefix},{mod_name},{func_name},{actual_threads},'
               f'{arr.dtype.name},{"x".join(str(i) for i in args.shape)},'
               f'{"in-place" if in_place else "out-of-place"},{t:.5g}')
+
+    if args.verbose:
+        perf.print_summary(perf_times)
