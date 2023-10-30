@@ -8,10 +8,37 @@ import inspect
 import numpy as np
 import pyfftw
 import scipy.fft
+import torch.fft
 import os
 import perf
 import re
 import sys
+
+
+class TorchFft(object):
+    '''
+    Bridge to PyTorch FFT module.
+    '''
+    def fft(self, a, n=None, dim=-1, norm=None):
+        return torch.fft.fft(self.upload(a), n, dim, norm)
+    def rfft(self, a, n=None, dim=-1, norm=None):
+        return torch.fft.rfft(self.upload(a), n, dim, norm)
+    def fft2(self, a, s=None, dim=(-2, -1), norm=None):
+        return torch.fft.fft2(self.upload(a), s, dim, norm)
+    def rfft2(self, a, s=None, dim=(-2, -1), norm=None):
+        return torch.fft.rfft2(self.upload(a), s, dim, norm)
+    def fftn(self, a, s=None, dim=None, norm=None):
+        return torch.fft.fftn(self.upload(a), s, dim, norm)
+    def rfftn(self, a, s=None, dimp=None, norm=None):
+        return torch.fft.rfftn(self.upload(a), s, dim, norm)
+
+
+class TorchFft_CPU(TorchFft):
+    '''
+    Bridge to PyTorch FFT module (CPU backend).
+    '''
+    def upload(self, a):
+        return torch.from_numpy(a)
 
 
 # Mark which FFT submodules are available...
@@ -19,6 +46,7 @@ fft_modules = {
     'numpy.fft': np.fft,
     'pyfftw': pyfftw.builders,
     'scipy.fft': scipy.fft,
+    'torch.fft': TorchFft_CPU(),
 }
 
 def valid_shape(shape_str):
