@@ -33,7 +33,7 @@ class TorchFft(object):
         return self.download(torch.fft.rfft2(self.upload(a), s, dim, norm))
     def fftn(self, a, s=None, dim=None, norm=None):
         return self.download(torch.fft.fftn(self.upload(a), s, dim, norm))
-    def rfftn(self, a, s=None, dimp=None, norm=None):
+    def rfftn(self, a, s=None, dim=None, norm=None):
         return self.download(torch.fft.rfftn(self.upload(a), s, dim, norm))
 
 
