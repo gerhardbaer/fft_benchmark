@@ -13,6 +13,9 @@ import re
 import sys
 
 
+DEFAULT_REF_MODULE = 'numpy.fft'
+
+
 # Mark which FFT submodules are available...
 fft_modules = {'numpy.fft': np.fft, 'scipy.fft': scipy.fft}
 
@@ -46,6 +49,11 @@ fft_group.add_argument('-t', '--threads', '--num-threads', '--core-number',
                        'number of threads globally, and will also try to '
                        'set number of workers in scipy.fft. (default in this '
                        'environment: %(default)d)')
+fft_group.add_argument('-M', '--ref-module',
+                       default=DEFAULT_REF_MODULE,
+                       choices=tuple(fft_modules.keys()),
+                       help='Use FFT function from REF_MODULE as reference. '
+                       '(default: %(default)s)')
 fft_group.add_argument('-m', '--modules', '--submodules', nargs='*',
                        default=tuple(fft_modules.keys()),
                        choices=tuple(fft_modules.keys()),
@@ -134,6 +142,14 @@ print("", flush=True)
 if args.header:
     print('prefix,module,function,threads,dtype,size,place,time', flush=True)
 
+ref_mod = fft_modules[args.ref_module]
+ref_func = getattr(ref_mod, func_name)
+
+# First run with the reference module
+buf = np.empty_like(arr)
+np.copyto(buf, arr)
+ref_buf = ref_func(buf)
+
 # Run benchmarks. One for each selected module
 for mod_name in args.modules:
     # Determine arguments to benchmark and get function
@@ -166,7 +182,8 @@ for mod_name in args.modules:
     del x1
     del buf
 
-    perf_times = perf.time_func(func, arr, kwargs, **time_kwargs)
+    res = perf.time_func(func, arr, kwargs, **time_kwargs)
+    perf_times = res[0]
     for t in perf_times:
         print(f'{args.prefix},{mod_name},{func_name},{actual_threads},'
               f'{arr.dtype.name},{"x".join(str(i) for i in args.shape)},'
@@ -174,3 +191,8 @@ for mod_name in args.modules:
 
     if args.verbose:
         perf.print_summary(perf_times)
+
+        buf = res[1]
+        l1_error = np.abs(ref_buf - buf).sum()
+        l2_error = np.abs((ref_buf - buf)**2).sum()
+        print(f'TAG: data: l1_error={l1_error:.5g}, l2_error={l2_error:.5g}')
