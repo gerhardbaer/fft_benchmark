@@ -6,13 +6,14 @@ import argparse
 import importlib
 import inspect
 import numpy as np
-import pyfftw
 import scipy.fft
 import torch.fft
 import os
 import perf
 import re
 import sys
+
+import mod_pyfftw
 
 
 DEFAULT_REF_MODULE = 'numpy.fft'
@@ -49,7 +50,7 @@ class TorchFft_CPU(TorchFft):
 # Mark which FFT submodules are available...
 fft_modules = {
     'numpy.fft': np.fft,
-    'pyfftw': pyfftw.builders,
+    'pyfftw.builders': mod_pyfftw.PyFFTW_Builders(),
     'scipy.fft': scipy.fft,
     'torch.fft': TorchFft_CPU(),
 }
