@@ -12,12 +12,22 @@ import perf
 import re
 import sys
 
+import mod_pyfftw
+import mod_pytorch
+import mod_pyvkfft
+
+
+DEFAULT_REF_MODULE = 'numpy.fft'
 
 # Mark which FFT submodules are available...
 fft_modules = {
     'numpy.fft': np.fft,
     'scipy.fft': scipy.fft,
 }
+
+if mod_pyvkfft.VkFft_OpenCL_GPU.available():
+    fft_modules.update({'pyvkfft.opencl.gpu': mod_pyvkfft.VkFft_OpenCL_GPU()})
+
 
 def valid_shape(shape_str):
     shape = re.sub(r'[^\d]+', 'x', shape_str).strip('x').split('x')
