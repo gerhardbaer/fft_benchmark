@@ -191,7 +191,7 @@ def time_func(func, x, kwargs, timer=None, batch_size=16, repetitions=24,
         #
         times_list[i] = time_tot / actual_batch_size
     gc.enable()
-    return times_list
+    return (times_list, res)
 
 
 def print_summary(data, header=''):
