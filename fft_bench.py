@@ -25,6 +25,8 @@ fft_modules = {
     'scipy.fft': scipy.fft,
 }
 
+if mod_pyvkfft.VkFft_OpenCL_CPU.available():
+    fft_modules.update({'pyvkfft.opencl.cpu': mod_pyvkfft.VkFft_OpenCL_CPU()})
 if mod_pyvkfft.VkFft_OpenCL_GPU.available():
     fft_modules.update({'pyvkfft.opencl.gpu': mod_pyvkfft.VkFft_OpenCL_GPU()})
 

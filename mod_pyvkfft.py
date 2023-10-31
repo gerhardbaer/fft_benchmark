@@ -49,6 +49,17 @@ class VkFft_OpenCL(VkFft):
         return None
 
 
+class VkFft_OpenCL_CPU(VkFft_OpenCL):
+    device_type = cl.device_type.CPU
+
+    def __init__(self):
+        super().__init__(VkFft_OpenCL_CPU.device_type)
+
+    @staticmethod
+    def available():
+        return VkFft_OpenCL.get_device(VkFft_OpenCL_CPU.device_type) is not None
+
+
 class VkFft_OpenCL_GPU(VkFft_OpenCL):
     device_type = cl.device_type.GPU
 
